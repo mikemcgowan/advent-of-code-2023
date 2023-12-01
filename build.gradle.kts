@@ -24,7 +24,9 @@ extra["springShellVersion"] = "3.2.0-RC1"
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.springframework.shell:spring-shell-starter")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
+        exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
+    }
 }
 
 dependencyManagement {
