@@ -1,12 +1,12 @@
 package com.github.mikemcgowan.adventofcode2023.days.day02
 
+import com.github.mikemcgowan.adventofcode2023.resourceToLines
 import org.jline.terminal.Terminal
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.io.Resource
 import org.springframework.shell.standard.ShellComponent
 import org.springframework.shell.standard.ShellMethod
 import org.springframework.shell.standard.ShellOption
-import java.io.BufferedReader
 
 @ShellComponent
 class Day02(terminal: Terminal) {
@@ -22,8 +22,11 @@ class Day02(terminal: Terminal) {
     lateinit var input: Resource
 
     @ShellMethod("Day 2")
-    fun day2(@ShellOption(defaultValue = "false") skipPart1: Boolean, @ShellOption(defaultValue = "false") skipPart2: Boolean) {
-        val lines = input.inputStream.bufferedReader().use(BufferedReader::readText).split('\n').filter { it.isNotEmpty() }
+    fun day2(
+        @ShellOption(defaultValue = "false") skipPart1: Boolean,
+        @ShellOption(defaultValue = "false") skipPart2: Boolean
+    ) {
+        val lines = resourceToLines(input)
         if (!skipPart1) writer.println("Part1: " + part1(lines))
         if (!skipPart2) writer.println("Part2: " + part2(lines))
         writer.flush()
