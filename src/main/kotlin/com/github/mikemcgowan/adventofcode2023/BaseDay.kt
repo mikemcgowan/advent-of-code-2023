@@ -7,7 +7,8 @@ import java.io.BufferedReader
 abstract class BaseDay(terminal: Terminal) {
     private val writer = terminal.writer()
 
-    fun run(lines: List<String>, skipPart1: Boolean, skipPart2: Boolean) {
+    protected fun run(input: Resource, skipPart1: Boolean, skipPart2: Boolean) {
+        val lines = resourceToLines(input)
         if (!skipPart1) writer.println("Part1: " + part1(lines))
         if (!skipPart2) writer.println("Part2: " + part2(lines))
         writer.flush()
@@ -16,6 +17,6 @@ abstract class BaseDay(terminal: Terminal) {
     abstract fun part1(lines: List<String>): Long
     abstract fun part2(lines: List<String>): Long
 
-    protected fun resourceToLines(r: Resource) =
+    private fun resourceToLines(r: Resource) =
         r.inputStream.bufferedReader().use(BufferedReader::readText).split('\n').filter { it.isNotEmpty() }
 }

@@ -25,8 +25,7 @@ class Day02(terminal: Terminal) : BaseDay(terminal) {
         @ShellOption(defaultValue = "false") skipPart1: Boolean,
         @ShellOption(defaultValue = "false") skipPart2: Boolean
     ) {
-        val lines = resourceToLines(input)
-        run(lines, skipPart1, skipPart2)
+        run(input, skipPart1, skipPart2)
     }
 
     override fun part1(lines: List<String>): Long =
