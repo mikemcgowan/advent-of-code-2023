@@ -62,7 +62,7 @@ class Day02(terminal: Terminal) : BaseDay(terminal) {
                 val ws = colour.trim().split(' ')
                 val name = ws[1].trim().lowercase()
                 val count = ws[0].trim().toInt()
-                when (name.trim()) {
+                when (name) {
                     "red" -> red = count
                     "green" -> green = count
                     "blue" -> blue = count
