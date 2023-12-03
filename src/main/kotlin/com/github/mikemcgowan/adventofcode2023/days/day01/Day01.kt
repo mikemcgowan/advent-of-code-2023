@@ -1,6 +1,6 @@
 package com.github.mikemcgowan.adventofcode2023.days.day01
 
-import com.github.mikemcgowan.adventofcode2023.resourceToLines
+import com.github.mikemcgowan.adventofcode2023.BaseDay
 import org.jline.terminal.Terminal
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.io.Resource
@@ -9,8 +9,10 @@ import org.springframework.shell.standard.ShellMethod
 import org.springframework.shell.standard.ShellOption
 
 @ShellComponent
-class Day01(terminal: Terminal) {
-    private val writer = terminal.writer()
+class Day01(terminal: Terminal) : BaseDay(terminal) {
+    @Value("classpath:days/day01/input.txt")
+    lateinit var input: Resource
+
     private val wordToDigit = mapOf(
         "one" to "1",
         "two" to "2",
@@ -23,25 +25,21 @@ class Day01(terminal: Terminal) {
         "nine" to "9",
     )
 
-    @Value("classpath:days/day01/input.txt")
-    lateinit var input: Resource
-
     @ShellMethod("Day 1")
     fun day1(
         @ShellOption(defaultValue = "false") skipPart1: Boolean,
         @ShellOption(defaultValue = "false") skipPart2: Boolean
     ) {
         val lines = resourceToLines(input)
-        if (!skipPart1) writer.println("Part1: " + part1(lines))
-        if (!skipPart2) writer.println("Part2: " + part2(lines))
-        writer.flush()
+        run(lines, skipPart1, skipPart2)
     }
 
-    fun part1(lines: List<String>): Int = lines
+    override fun part1(lines: List<String>): Long = lines
         .map { it.first { x -> x.isDigit() } to it.last { x -> x.isDigit() } }
         .sumOf { "${it.first}${it.second}".toInt() }
+        .toLong()
 
-    fun part2(lines: List<String>): Int =
+    override fun part2(lines: List<String>): Long =
         part1(lines.map { line ->
             val a = find(line, line.indices)
             val b = find(line, line.indices.reversed())

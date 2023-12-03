@@ -1,6 +1,6 @@
 package com.github.mikemcgowan.adventofcode2023.days.day02
 
-import com.github.mikemcgowan.adventofcode2023.resourceToLines
+import com.github.mikemcgowan.adventofcode2023.BaseDay
 import org.jline.terminal.Terminal
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.io.Resource
@@ -9,8 +9,10 @@ import org.springframework.shell.standard.ShellMethod
 import org.springframework.shell.standard.ShellOption
 
 @ShellComponent
-class Day02(terminal: Terminal) {
-    private val writer = terminal.writer()
+class Day02(terminal: Terminal) : BaseDay(terminal) {
+    @Value("classpath:days/day02/input.txt")
+    lateinit var input: Resource
+
     private val maxRed = 12
     private val maxGreen = 13
     private val maxBlue = 14
@@ -18,25 +20,20 @@ class Day02(terminal: Terminal) {
     data class Reveal(val red: Int, val green: Int, val blue: Int)
     data class Game(val id: Int, val reveals: List<Reveal>)
 
-    @Value("classpath:days/day02/input.txt")
-    lateinit var input: Resource
-
     @ShellMethod("Day 2")
     fun day2(
         @ShellOption(defaultValue = "false") skipPart1: Boolean,
         @ShellOption(defaultValue = "false") skipPart2: Boolean
     ) {
         val lines = resourceToLines(input)
-        if (!skipPart1) writer.println("Part1: " + part1(lines))
-        if (!skipPart2) writer.println("Part2: " + part2(lines))
-        writer.flush()
+        run(lines, skipPart1, skipPart2)
     }
 
-    fun part1(lines: List<String>): Int =
-        parse(lines).filter { gamePossible(it) }.sumOf { it.id }
+    override fun part1(lines: List<String>): Long =
+        parse(lines).filter { gamePossible(it) }.sumOf { it.id }.toLong()
 
-    fun part2(lines: List<String>): Int =
-        parse(lines).map { minSetOfCubes(it) }.sumOf { it.red * it.green * it.blue }
+    override fun part2(lines: List<String>): Long =
+        parse(lines).map { minSetOfCubes(it) }.sumOf { it.red * it.green * it.blue }.toLong()
 
     private fun gamePossible(game: Game): Boolean =
         game.reveals.all { reveal -> reveal.red <= maxRed && reveal.blue <= maxBlue && reveal.green <= maxGreen }

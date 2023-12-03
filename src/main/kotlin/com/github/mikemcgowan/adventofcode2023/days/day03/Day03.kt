@@ -1,6 +1,6 @@
 package com.github.mikemcgowan.adventofcode2023.days.day03
 
-import com.github.mikemcgowan.adventofcode2023.resourceToLines
+import com.github.mikemcgowan.adventofcode2023.BaseDay
 import org.jline.terminal.Terminal
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.io.Resource
@@ -12,9 +12,7 @@ typealias Point = Pair<Int, Int>
 typealias Cell = Pair<Char, Point>
 
 @ShellComponent
-class Day03(terminal: Terminal) {
-    private val writer = terminal.writer()
-
+class Day03(terminal: Terminal) : BaseDay(terminal) {
     @Value("classpath:days/day03/input.txt")
     lateinit var input: Resource
 
@@ -26,25 +24,23 @@ class Day03(terminal: Terminal) {
         @ShellOption(defaultValue = "false") skipPart2: Boolean
     ) {
         val lines = resourceToLines(input)
-        if (!skipPart1) writer.println("Part1: " + part1(lines))
-        if (!skipPart2) writer.println("Part2: " + part2(lines))
-        writer.flush()
+        run(lines, skipPart1, skipPart2)
     }
 
-    fun part1(lines: List<String>): Long =
+    override fun part1(lines: List<String>): Long =
         go(lines).sum()
 
-    fun part2(lines: List<String>): Long? {
+    override fun part2(lines: List<String>): Long {
         gearMap = mutableMapOf()
         go(lines)
-        return gearMap?.filter { it.value.size == 2 }?.map { it.value[0] * it.value[1] }?.sum()
+        return gearMap?.filter { it.value.size == 2 }?.map { it.value[0] * it.value[1] }?.sum()!!
     }
 
     private fun go(lines: List<String>): List<Long> {
         val partNumbers = mutableListOf<Long>()
         val cur = mutableListOf<Cell>()
         var row = 0
-        var col = 0
+        var col: Int
         lines.forEach { line ->
             col = 0
             cur.clear()
@@ -58,7 +54,6 @@ class Day03(terminal: Terminal) {
             maybeAddPart(cur, partNumbers, lines)
             ++row
         }
-        maybeAddPart(cur, partNumbers, lines)
         return partNumbers
     }
 
