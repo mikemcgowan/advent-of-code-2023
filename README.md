@@ -27,10 +27,10 @@ BUILD SUCCESSFUL in 4s
 
 $ java -jar ./build/libs/advent-of-code-2023-1.0.jar
 shell:>day1
-Part1: spoiler
-Part2: spoiler
+Part 1: spoiler [3 ms]
+Part 2: spoiler [10 ms]
 shell:>day2
-Part1: spoiler
-Part2: spoiler
+Part 1: spoiler [10 ms]
+Part 2: spoiler [3 ms]
 shell:>
 ```

@@ -4,8 +4,10 @@ plugins {
     id("org.springframework.boot") version "3.2.0"
     id("io.spring.dependency-management") version "1.1.4"
     id("com.adarshr.test-logger") version "4.0.0"
+    id("org.sonarqube") version "4.4.1.3373"
     kotlin("jvm") version "1.9.20"
     kotlin("plugin.spring") version "1.9.20"
+    jacoco
 }
 
 group = "com.github.mikemcgowan"
@@ -46,3 +48,16 @@ tasks.withType<KotlinCompile> {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
+
+tasks.jacocoTestReport {
+    reports {
+        xml.required.set(true)
+    }
+}
+
+jacoco {
+    toolVersion = "0.8.9"
+}
+
+tasks.named("jacocoTestReport").get().dependsOn("test")
+tasks.named("sonar").get().dependsOn("jacocoTestReport")

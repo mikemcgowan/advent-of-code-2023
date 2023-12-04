@@ -3,14 +3,21 @@ package com.github.mikemcgowan.adventofcode2023
 import org.jline.terminal.Terminal
 import org.springframework.core.io.Resource
 import java.io.BufferedReader
+import kotlin.time.measureTimedValue
 
 abstract class BaseDay(terminal: Terminal) {
     private val writer = terminal.writer()
 
     protected fun run(input: Resource, skipPart1: Boolean, skipPart2: Boolean) {
         val lines = resourceToLines(input)
-        if (!skipPart1) writer.println("Part 1: " + part1(lines))
-        if (!skipPart2) writer.println("Part 2: " + part2(lines))
+        if (!skipPart1) {
+            val (answer, timeTaken) = measureTimedValue { part1(lines) }
+            writer.println("Part 1: $answer [${timeTaken.inWholeMilliseconds} ms]")
+        }
+        if (!skipPart2) {
+            val (answer, timeTaken) = measureTimedValue { part2(lines) }
+            writer.println("Part 2: $answer [${timeTaken.inWholeMilliseconds} ms]")
+        }
         writer.flush()
     }
 

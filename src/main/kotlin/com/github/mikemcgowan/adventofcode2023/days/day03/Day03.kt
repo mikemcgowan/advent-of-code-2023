@@ -16,7 +16,7 @@ class Day03(terminal: Terminal) : BaseDay(terminal) {
     @Value("classpath:days/day03/input.txt")
     lateinit var input: Resource
 
-    private var gearMap: MutableMap<Cell, MutableList<Long>>? = null
+    private var gearMap: MutableMap<Cell, List<Long>>? = null
 
     @ShellMethod("Day 3")
     fun day3(
@@ -32,7 +32,7 @@ class Day03(terminal: Terminal) : BaseDay(terminal) {
     override fun part2(lines: List<String>): Long {
         gearMap = mutableMapOf()
         go(lines)
-        return gearMap?.filter { it.value.size == 2 }?.map { it.value[0] * it.value[1] }?.sum()!!
+        return gearMap?.filter { it.value.size == 2 }?.map { it.value[0] * it.value[1] }?.sum() ?: -1
     }
 
     private fun go(lines: List<String>): List<Long> {
@@ -70,8 +70,7 @@ class Day03(terminal: Terminal) : BaseDay(terminal) {
 
     private fun maybeAddToGearMap(adjacentSymbols: List<List<Cell>>, n: Long) {
         adjacentSymbols.flatten().filter { it.first == '*' }.distinctBy { it.second }.forEach { gear ->
-            gearMap?.putIfAbsent(gear, mutableListOf())
-            gearMap!![gear]?.add(n)
+            gearMap?.compute(gear) { _, v -> v?.plus(n) ?: listOf(n) }
         }
     }
 
