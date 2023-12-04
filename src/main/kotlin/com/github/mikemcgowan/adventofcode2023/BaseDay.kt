@@ -9,8 +9,8 @@ abstract class BaseDay(terminal: Terminal) {
 
     protected fun run(input: Resource, skipPart1: Boolean, skipPart2: Boolean) {
         val lines = resourceToLines(input)
-        if (!skipPart1) writer.println("Part1: " + part1(lines))
-        if (!skipPart2) writer.println("Part2: " + part2(lines))
+        if (!skipPart1) writer.println("Part 1: " + part1(lines))
+        if (!skipPart2) writer.println("Part 2: " + part2(lines))
         writer.flush()
     }
 

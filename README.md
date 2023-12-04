@@ -25,7 +25,7 @@ SUCCESS: Executed 4 tests in 1.5s
 BUILD SUCCESSFUL in 4s
 9 actionable tasks: 9 executed
 
-$ java -jar ./build/libs/advent-of-code-2023-0.0.1-SNAPSHOT.jar
+$ java -jar ./build/libs/advent-of-code-2023-1.0.jar
 shell:>day1
 Part1: spoiler
 Part2: spoiler

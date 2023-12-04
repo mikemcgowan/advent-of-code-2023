@@ -27,11 +27,11 @@ class Day04(terminal: Terminal) : BaseDay(terminal) {
 
     override fun part2(lines: List<String>): Long {
         val m = mutableMapOf<Int, Int>()
-        (1..lines.size).map { m.put(it, 1) }
+        (1..lines.size).map { m[it] = 1 }
         m.forEach { entry ->
             val n = winning(lines[entry.key - 1])
             val spawn = (entry.key + 1)..(entry.key + n)
-            spawn.forEach { m[it] = m[it]!! + entry.value }
+            spawn.forEach { m.computeIfPresent(it) { _, v -> v + entry.value } }
         }
         return m.values.sum().toLong()
     }
