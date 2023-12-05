@@ -1,6 +1,6 @@
 package com.github.mikemcgowan.adventofcode2023.days.day03
 
-import com.github.mikemcgowan.adventofcode2023.BaseDay
+import com.github.mikemcgowan.adventofcode2023.days.BaseDay
 import org.jline.terminal.Terminal
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.io.Resource

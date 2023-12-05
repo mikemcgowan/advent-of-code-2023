@@ -1,4 +1,4 @@
-package com.github.mikemcgowan.adventofcode2023
+package com.github.mikemcgowan.adventofcode2023.days
 
 import org.jline.terminal.Terminal
 import org.springframework.core.io.Resource
