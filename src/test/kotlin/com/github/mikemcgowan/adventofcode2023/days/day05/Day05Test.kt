@@ -44,20 +44,6 @@ class Day05Test {
     )
 
     @Test
-    fun lines() {
-        val lines = Day05.Lines(
-            listOf(
-                Day05.Line(50, 98, 2),
-                Day05.Line(52, 50, 48),
-            )
-        )
-        Assertions.assertEquals(81, lines.map(79))
-        Assertions.assertEquals(14, lines.map(14));
-        Assertions.assertEquals(57, lines.map(55));
-        Assertions.assertEquals(13, lines.map(13));
-    }
-
-    @Test
     fun part1() {
         Assertions.assertEquals(35, Day05(terminal).part1(input))
     }
@@ -65,5 +51,46 @@ class Day05Test {
     @Test
     fun part2() {
         Assertions.assertEquals(46, Day05(terminal).part2(input))
+    }
+
+    @Test
+    fun mapRange() {
+        val line = Day05.Line(100, 10, 10)
+
+        // given range lies entirely 'below' line's source range
+        Assertions.assertEquals(
+            Triple(null, 1L..9L, null),
+            line.mapRange(1L..9L)
+        )
+
+        // given range lies entirely 'above' line's source range
+        Assertions.assertEquals(
+            Triple(null, null, 20L..29L),
+            line.mapRange(20L..29L)
+        )
+
+        // given range lies entirely within line's source range
+        Assertions.assertEquals(
+            Triple(102L..107L, null, null),
+            line.mapRange(12L..17L)
+        )
+
+        // line's source range lies entirely within given range
+        Assertions.assertEquals(
+            Triple(100L..109L, 1L..9L, 20L..29L),
+            line.mapRange(1L..29L)
+        )
+
+        // given range lies partially 'below' line's source range
+        Assertions.assertEquals(
+            Triple(100L..107L, 1L..9L, null),
+            line.mapRange(1L..17L)
+        )
+
+        // given range lies partially 'above' line's source range
+        Assertions.assertEquals(
+            Triple(107L..109L, null, 20L..29L),
+            line.mapRange(17L..29L)
+        )
     }
 }
