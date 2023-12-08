@@ -14,11 +14,19 @@ class Day06Test {
 
     @Test
     fun part1() {
-        Assertions.assertEquals(288, Day06(terminal).part1(input))
+        val day06 = Day06(terminal)
+        day06.optimized = true
+        Assertions.assertEquals(288, day06.part1(input))
+        day06.optimized = false
+        Assertions.assertEquals(288, day06.part1(input))
     }
 
     @Test
     fun part2() {
-        Assertions.assertEquals(0, Day06(terminal).part2(input))
+        val day06 = Day06(terminal)
+        day06.optimized = true
+        Assertions.assertEquals(71503, day06.part2(input))
+        day06.optimized = false
+        Assertions.assertEquals(71503, day06.part2(input))
     }
 }

@@ -13,12 +13,23 @@ class Day06(terminal: Terminal) : BaseDay(terminal) {
     @Value("classpath:days/day06/input.txt")
     lateinit var input: Resource
 
-    data class Race(val time: Int, val distance: Int) {
-        fun waysToBeatRecord(): Int {
-            val ways = (1..time / 2)
+    var optimized = true
+
+    data class Race(val time: Long, val distance: Long) {
+        fun waysToBeatRecord(optimized: Boolean): Int {
+            val ways = if (optimized) waysToBeatRecordFast() else waysToBeatRecordSlow()
+            return if (ways > 0 && time % 2L == 0L) ways - 1 else ways
+        }
+
+        private fun waysToBeatRecordSlow(): Int =
+            (1..time / 2)
                 .map { holdFor -> holdFor * (time - holdFor) }
                 .filter { it > distance }.size * 2
-            return if (ways > 0 && time % 2 == 0) ways - 1 else ways
+
+        private fun waysToBeatRecordFast(): Int {
+            val xs = 1..time / 2
+            val ys = xs.takeWhile { holdFor -> holdFor * (time - holdFor) <= distance }
+            return 2 * ((xs.last - xs.first + 1).toInt() - ys.size)
         }
     }
 
@@ -31,15 +42,24 @@ class Day06(terminal: Terminal) : BaseDay(terminal) {
     }
 
     override fun part1(lines: List<String>): Long =
-        parse(lines).map { it.waysToBeatRecord() }.fold(1) { acc, n -> acc * n }
+        parsePart1(lines).map { it.waysToBeatRecord(optimized) }.fold(1) { acc, n -> acc * n }
 
-    override fun part2(lines: List<String>): Long = 0
+    override fun part2(lines: List<String>): Long =
+        parsePart2(lines).waysToBeatRecord(optimized).toLong()
 
-    private fun parse(lines: List<String>): List<Race> {
-        val f: (String) -> List<Int> =
-            { s -> s.split(':')[1].split(Regex("""\s+""")).filter { it.isNotBlank() }.map { it.trim().toInt() } }
+    private fun parsePart1(lines: List<String>): List<Race> {
+        val f: (String) -> List<Long> =
+            { s -> s.split(':')[1].split(Regex("""\s+""")).filter { it.isNotBlank() }.map { it.trim().toLong() } }
         val times = f(lines[0])
         val records = f(lines[1])
         return times.zip(records).map { Race(it.first, it.second) }
+    }
+
+    private fun parsePart2(lines: List<String>): Race {
+        val f: (String) -> Long =
+            { s -> s.split(':')[1].filter { !it.isWhitespace() }.toLong() }
+        val time = f(lines[0])
+        val record = f(lines[1])
+        return Race(time, record)
     }
 }
