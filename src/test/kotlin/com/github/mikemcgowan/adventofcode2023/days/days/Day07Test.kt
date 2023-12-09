@@ -63,6 +63,6 @@ class Day07Test {
 
     @Test
     fun part2() {
-        Assertions.assertEquals(0, Day07(terminal).part2(input))
+        Assertions.assertEquals(5905, Day07(terminal).part2(input))
     }
 }
