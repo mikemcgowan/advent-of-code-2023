@@ -1,4 +1,4 @@
-package com.github.mikemcgowan.adventofcode2023.days.days
+package com.github.mikemcgowan.adventofcode2023.days.day07
 
 import org.jline.terminal.Terminal
 import org.junit.jupiter.api.Assertions
