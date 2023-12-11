@@ -24,19 +24,20 @@ class Day09(terminal: Terminal) : BaseDay(terminal) {
     override fun part1(lines: List<String>): Long =
         lines.sumOf { line ->
             val xs = parseLine(line)
-            expandLine(xs, listOf(xs)).sumOf { it.last() }
+            expandLine(listOf(xs)).sumOf { it.last() }
         }
 
     override fun part2(lines: List<String>): Long =
         lines.sumOf { line ->
             val xs = parseLine(line)
-            expandLine(xs, listOf(xs)).reversed().fold(0L) { acc, ys -> ys.first() - acc }
+            expandLine(listOf(xs)).reversed().fold(0L) { acc, ys -> ys.first() - acc }
         }
 
-    private tailrec fun expandLine(xs: List<Long>, xss: List<List<Long>>): List<List<Long>> {
+    private tailrec fun expandLine(xss: List<List<Long>>): List<List<Long>> {
+        val xs = xss.last()
         if (xs.all { it == 0L }) return xss
         val ys = xs.zip(xs.drop(1)).map { it.second - it.first }
-        return expandLine(ys, xss.plusElement(ys))
+        return expandLine(xss.plusElement(ys))
     }
 
     private fun parseLine(s: String): List<Long> =
