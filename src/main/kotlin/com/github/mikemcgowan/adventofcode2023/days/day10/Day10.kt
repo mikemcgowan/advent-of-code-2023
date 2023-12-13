@@ -16,6 +16,7 @@ class Day10(terminal: Terminal) : BaseDay(terminal) {
     lateinit var input: Resource
 
     enum class Dir { NORTH, EAST, SOUTH, WEST }
+    enum class Cell(val c: Char) { OUTSIDE('O'), PIPE('X'), INSIDE('I') }
     data class Point(val x: Int, val y: Int)
 
     @ShellMethod("Day 10")
@@ -29,25 +30,57 @@ class Day10(terminal: Terminal) : BaseDay(terminal) {
     override fun part1(lines: List<String>): Long {
         val grid = parse(lines)
         val s = findS(grid)
-        return run(grid, s).toLong()
+        val steps = getSteps(grid, s)
+        return steps.size / 2L
     }
 
-    override fun part2(lines: List<String>): Long = 0
+    override fun part2(lines: List<String>): Long {
+        val grid = parse(lines)
+        val s = findS(grid)
+        val pipe = getSteps(grid, s)
+        val zs = grid.mapIndexed { y, xs ->
+            val init = Cell.OUTSIDE to listOf<Cell>()
+            xs.foldIndexed(init) { x, (state, cells), c ->
+                assert(c == grid[y][x])
+                val inPipe = Point(x, y) in pipe
+                when {
+                    inPipe && c == '|' -> flipState(state) to cells.plus(Cell.PIPE)
+                    inPipe && c == '7' -> maybeFlipState('L', state, xs.take(x)) to cells.plus(Cell.PIPE)
+                    inPipe && c == 'J' -> maybeFlipState('F', state, xs.take(x)) to cells.plus(Cell.PIPE)
+                    inPipe -> state to cells.plus(Cell.PIPE)
+                    else -> state to cells.plus(state)
+                }
+            }.second
+        }
+        return zs.sumOf { xs -> xs.count { it == Cell.INSIDE } }.toLong()
+    }
 
-    private fun run(grid: Grid, s: Point): Int {
+    private fun maybeFlipState(flipIfEnteredAt: Char, state: Cell, cs: List<Char>): Cell {
+        val enteredAt = cs.dropLastWhile { it == '-' }.last()
+        return if (enteredAt == flipIfEnteredAt) flipState(state) else state
+    }
+
+    private fun flipState(c: Cell): Cell =
+        when (c) {
+            Cell.INSIDE -> Cell.OUTSIDE
+            Cell.OUTSIDE -> Cell.INSIDE
+            else -> c
+        }
+
+    private fun getSteps(grid: Grid, s: Point): Set<Point> {
         var currentPoint = s
         var direction = possibleDirections(currentPoint, grid).first()
-        var steps = 0
+        val steps = mutableSetOf<Point>()
         do {
             currentPoint = move(currentPoint, direction)
             direction = changeDirection(grid[currentPoint.y][currentPoint.x], direction)
-            ++steps
+            steps.add(currentPoint)
         } while (currentPoint != s)
-        return steps / 2
+        return steps
     }
 
     private fun findS(grid: Grid): Point {
-        val sy = grid.indexOfFirst { cs -> cs.contains('S') }
+        val sy = grid.indexOfFirst { it.contains('S') }
         val sx = grid[sy].indexOfFirst { it == 'S' }
         return Point(sx, sy)
     }
